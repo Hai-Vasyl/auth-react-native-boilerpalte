@@ -30,10 +30,6 @@ export interface IAuthSuccess {
   user: IUser
 }
 
-interface IAuthError {
-  errors: IError[]
-}
-
 export interface fetchStartAuth {
   type: typeof FETCH_START_AUTH
 }
@@ -45,7 +41,7 @@ export interface fetchSuccessAuth {
 
 export interface fetchErrorAuth {
   type: typeof FETCH_ERROR_AUTH
-  payload: IAuthError
+  payload: IError[]
 }
 
 export type DispatchActionsFetch =

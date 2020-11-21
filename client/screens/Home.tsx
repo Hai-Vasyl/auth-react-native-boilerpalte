@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import {
   View,
   Text,
@@ -9,14 +9,38 @@ import {
 import { IHomeProps } from "../interfaces"
 import { TextInput } from "react-native-paper"
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
+import { fetchAuth } from "../redux/actions/auth"
+import { useSelector, useDispatch } from "react-redux"
+import { RootStore } from "../redux/store"
 
 const Home: React.FC<IHomeProps> = ({ navigation }) => {
   const [flipLogin, setFlipLogin] = useState(true)
   const [form, setForm] = useState([
-    { param: "username", label: "Username", value: "" },
-    { param: "email", label: "Email", value: "" },
-    { param: "password", label: "Password", value: "" },
+    { param: "username", label: "Username", value: "", msg: "" },
+    { param: "email", label: "Email", value: "", msg: "" },
+    { param: "password", label: "Password", value: "", msg: "" },
   ])
+  const {
+    auth: { loading, errors, token },
+  } = useSelector((state: RootStore) => state)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    setForm((prevForm) =>
+      prevForm.map((field) => {
+        let errorMsg = ""
+        errors.forEach((error) => {
+          if (field.param === error.param) {
+            errorMsg = error.msg
+          }
+        })
+        if (errorMsg) {
+          return { ...field, msg: errorMsg }
+        }
+        return field
+      })
+    )
+  }, [errors])
 
   const handleChangeField = (value: string, param: string) => {
     setForm((prevForm) =>
@@ -33,6 +57,24 @@ const Home: React.FC<IHomeProps> = ({ navigation }) => {
     setFlipLogin((prevFlip) => !prevFlip)
   }
 
+  const handleSubmitForm = () => {
+    const [username, email, password] = form
+    const loginValues = { email: email.value, password: password.value }
+    const registerValues = { ...loginValues, username: username.value }
+
+    dispatch(fetchAuth(flipLogin, flipLogin ? loginValues : registerValues))
+  }
+
+  // const handleFetch = async () => {
+  //   try {
+  //     const res = await axios.get(`http://192.168.1.2:4000/test`)
+  //     console.log("RESPONSE: ", res)
+  //   } catch (error) {
+  //     console.log("ERROR: ", error.message)
+  //   }
+  // }
+
+  console.log({ loading, errors, token })
   return (
     <View style={styles.wrapper}>
       <KeyboardAvoidingView behavior='height'>
@@ -57,19 +99,26 @@ const Home: React.FC<IHomeProps> = ({ navigation }) => {
         <View>
           {form.map((field) => {
             return (
-              <TextInput
-                style={[
-                  styles.field,
-                  flipLogin &&
-                    field.param === "username" &&
-                    styles.field_closed,
-                ]}
-                key={field.param}
-                label={field.label}
-                mode='outlined'
-                value={field.value}
-                onChangeText={(text) => handleChangeField(text, field.param)}
-              />
+              <View key={field.param}>
+                <TextInput
+                  style={[
+                    styles.field,
+                    flipLogin &&
+                      field.param === "username" &&
+                      styles.field_closed,
+                  ]}
+                  label={field.label}
+                  mode='outlined'
+                  value={field.value}
+                  onChangeText={(text) => handleChangeField(text, field.param)}
+                />
+                <Text
+                  style={{
+                    color: "red",
+                  }}>
+                  {field.msg}
+                </Text>
+              </View>
             )
           })}
         </View>
@@ -82,7 +131,8 @@ const Home: React.FC<IHomeProps> = ({ navigation }) => {
           }}>
           <TouchableOpacity
             activeOpacity={0.6}
-            style={[styles.btn, styles.btn_primary]}>
+            style={[styles.btn, styles.btn_primary]}
+            onPress={handleSubmitForm}>
             <Icon
               name={flipLogin ? "login-variant" : "checkbox-marked-outline"}
               size={20}

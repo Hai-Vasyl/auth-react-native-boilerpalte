@@ -46,6 +46,7 @@ const authReducer = (
       }
     case FETCH_SUCCESS_AUTH:
       const { token: tokenSuccess, user: userSuccess } = action.payload
+
       return {
         ...state,
         loading: false,
@@ -57,7 +58,7 @@ const authReducer = (
       return {
         ...state,
         loading: false,
-        errors: action.payload.errors,
+        errors: action.payload,
       }
     default:
       return state

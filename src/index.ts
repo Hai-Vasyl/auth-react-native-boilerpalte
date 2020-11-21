@@ -2,6 +2,7 @@ import express from "express"
 import mongoose from "mongoose"
 import bodyParser from "body-parser"
 import usersRoutes from "./routes/users"
+import cors from "cors"
 import { config } from "dotenv"
 config()
 
@@ -10,6 +11,7 @@ const { PORT, MONGO_USER, MONGO_PASS, MONGO_DB, NODE_ENV } = process.env
 ;(async () => {
   try {
     const app = express()
+    app.use(cors())
     app.use(bodyParser.urlencoded({ extended: false }))
     app.use(bodyParser.json())
 
@@ -25,6 +27,15 @@ const { PORT, MONGO_USER, MONGO_PASS, MONGO_DB, NODE_ENV } = process.env
     )
 
     app.use("/auth", usersRoutes)
+    // app.get("/test", (req, res) => {
+    //   try {
+    //     console.log("SERVER")
+    //     console.log("SERVER", req.body)
+    //     res.json("WORKS")
+    //   } catch (error) {
+    //     console.log("SERVER ERROR: ", error.message)
+    //   }
+    // })
 
     app.listen(PORT, () => console.log(`Server started on port: ${PORT}`))
   } catch (error) {
