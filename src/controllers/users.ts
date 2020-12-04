@@ -85,7 +85,9 @@ export const login_user = async (req: any, res: any) => {
 
     const comparedPassword = await bcrypt.compare(password, user.password)
     if (!comparedPassword) {
-      return res.status(400).json("Password is wrong!")
+      return res.status(400).json({
+        errors: [{ msg: "Password is wrong!", param: "password" }],
+      })
     }
 
     const token = jwt.sign({ userId: user._id }, JWT_SECRET)

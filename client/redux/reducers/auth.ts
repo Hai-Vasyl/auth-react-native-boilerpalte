@@ -46,7 +46,6 @@ const authReducer = (
       }
     case FETCH_SUCCESS_AUTH:
       const { token: tokenSuccess, user: userSuccess } = action.payload
-
       return {
         ...state,
         loading: false,

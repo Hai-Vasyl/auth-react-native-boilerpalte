@@ -3,7 +3,6 @@ import {
   FETCH_START_AUTH,
   FETCH_SUCCESS_AUTH,
   FETCH_ERROR_AUTH,
-  IAuthSuccess,
 } from "../types/auth"
 import { Dispatch } from "redux"
 import axios from "axios"
