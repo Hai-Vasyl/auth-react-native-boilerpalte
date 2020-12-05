@@ -7,43 +7,64 @@ import Icon from "react-native-vector-icons/MaterialIcons"
 import TabButton from "../components/TabButton"
 import axios from "axios"
 
-export interface IHomeProps {
+export interface IUserProps {
   navigation: any
   route: any
 }
 
-const About: React.FC<IHomeProps> = ({ route, navigation }) => {
+const User: React.FC<IUserProps> = ({ route, navigation }) => {
   const { userId } = route.params
   const {
     auth: { user, token },
   } = useSelector((state: RootStore) => state)
+  const [exUserData, setExUserData] = useState({
+    ava: user && user.ava ? user.ava : "",
+    role: user && user.role ? user.role : "",
+  })
   const [userData, setUserData] = useState([
     {
       param: "username",
       title: "Username",
-      value: user.username ? user.username : "",
+      value: user && user.username ? user.username : "",
     },
-    { param: "email", title: "Email", value: user.email ? user.email : "" },
+    {
+      param: "email",
+      title: "Email",
+      value: user && user.email ? user.email : "",
+    },
     {
       param: "firstname",
       title: "Firstname",
-      value: user.firstname ? user.firstname : "",
+      value: user && user.firstname ? user.firstname : "",
     },
     {
       param: "lastname",
       title: "Lastname",
-      value: user.lastname ? user.lastname : "",
+      value: user && user.lastname ? user.lastname : "",
     },
-    { param: "phone", title: "Phone", value: user.phone ? user.phone : "" },
+    {
+      param: "phone",
+      title: "Phone",
+      value: user && user.phone ? user.phone : "",
+    },
     {
       param: "address",
       title: "Address",
-      value: user.address ? user.address : "",
+      value: user && user.address ? user.address : "",
     },
-    { param: "bio", title: "Bio", value: user.bio ? user.bio : "" },
-    { param: "birth", title: "Birth", value: user.birth ? user.birth : "" },
-    { param: "date", title: "Last updated", value: user.date ? user.date : "" },
+    { param: "bio", title: "Bio", value: user && user.bio ? user.bio : "" },
+    {
+      param: "birth",
+      title: "Birth",
+      value: user && user.birth ? user.birth : "",
+    },
+    {
+      param: "date",
+      title: "Last updated",
+      value: user && user.date ? user.date : "",
+    },
   ])
+  const [initLoad, setInitLoad] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,6 +78,7 @@ const About: React.FC<IHomeProps> = ({ route, navigation }) => {
       )
 
       const userInfo = res.data
+      setExUserData({ ava: userInfo.ava, role: userInfo.role })
       setUserData((prevData) =>
         prevData.map((item) => {
           let newItem = item.value
@@ -68,14 +90,23 @@ const About: React.FC<IHomeProps> = ({ route, navigation }) => {
           return { ...item, value: newItem }
         })
       )
-      console.log("User info", res.data)
+      setInitLoad(false)
     }
 
-    if (user._id !== userId) {
+    if ((user && user._id !== userId) || !token) {
       fetchData()
+    } else {
+      setInitLoad(false)
     }
   }, [token, userId])
 
+  if (initLoad) {
+    return (
+      <View>
+        <Text>Loading ...</Text>
+      </View>
+    )
+  }
   return (
     <ScrollView
       contentContainerStyle={{
@@ -91,7 +122,7 @@ const About: React.FC<IHomeProps> = ({ route, navigation }) => {
         }}
       >
         <Image
-          source={{ uri: user.ava }}
+          source={{ uri: exUserData.ava }}
           style={{
             width: 200,
             height: 200,
@@ -101,24 +132,26 @@ const About: React.FC<IHomeProps> = ({ route, navigation }) => {
             padding: 5,
           }}
         />
-        <Icon
-          name='verified-user'
-          size={30}
-          style={{
-            position: "absolute",
-            bottom: 10,
-            right: 10,
-            borderWidth: 1,
-            borderColor: "lightgrey",
-            width: 50,
-            height: 50,
-            borderRadius: 50 / 2,
-            textAlign: "center",
-            lineHeight: 50,
-            backgroundColor: "whitesmoke",
-          }}
-          color='#333'
-        />
+        {exUserData.role === "admin" && (
+          <Icon
+            name='verified-user'
+            size={30}
+            style={{
+              position: "absolute",
+              bottom: 10,
+              right: 10,
+              borderWidth: 1,
+              borderColor: "lightgrey",
+              width: 50,
+              height: 50,
+              borderRadius: 50 / 2,
+              textAlign: "center",
+              lineHeight: 50,
+              backgroundColor: "whitesmoke",
+            }}
+            color='#333'
+          />
+        )}
       </View>
       <View
         style={{
@@ -138,43 +171,67 @@ const About: React.FC<IHomeProps> = ({ route, navigation }) => {
                   marginTop: 10,
                 }}
               >
-                <Text
+                <View
                   style={{
-                    fontSize: 15,
-                    color: "grey",
+                    flexDirection: "row",
                   }}
                 >
-                  {item.title}:
+                  <Text
+                    style={{
+                      color: "grey",
+                    }}
+                  >
+                    {item.title}:
+                  </Text>
                   <Text
                     style={{
                       color: "#333",
                       fontWeight: "bold",
+                      paddingLeft: 5,
                     }}
                   >
                     {moment(item.value).calendar()}
                   </Text>
-                </Text>
+                </View>
               </View>
             )
           }
           return (
             <View key={item.param}>
-              <Text
+              <View
                 style={{
-                  fontSize: 17,
-                  color: "grey",
+                  flexDirection: "row",
                 }}
               >
-                {item.title}:
+                <Text
+                  style={{
+                    fontSize: 17,
+                    color: "grey",
+                  }}
+                >
+                  {item.title}:
+                </Text>
                 <Text
                   style={{
                     color: "#333",
                     fontWeight: "bold",
+                    paddingLeft: 10,
+                    fontSize: 17,
                   }}
                 >
-                  {item.value ? item.value : <Text>Empty</Text>}
+                  {item.value ? (
+                    item.value
+                  ) : (
+                    <Text
+                      style={{
+                        color: "lightgrey",
+                      }}
+                    >
+                      Empty
+                    </Text>
+                  )}
                 </Text>
-              </Text>
+              </View>
             </View>
           )
         })}
@@ -201,4 +258,4 @@ const About: React.FC<IHomeProps> = ({ route, navigation }) => {
   )
 }
 
-export default About
+export default User

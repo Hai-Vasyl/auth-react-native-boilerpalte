@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native"
+import { View, Text, StyleSheet } from "react-native"
 import { TextInput } from "react-native-paper"
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import { fetchAuth } from "../redux/actions/auth"
@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { RootStore } from "../redux/store"
 import Button from "../components/Button"
 import { IError } from "../redux/types/auth"
+import stylesField from "../styles/field"
 
 interface IAuthProps {
   navigation: any
@@ -68,6 +69,30 @@ const Auth: React.FC<IAuthProps> = ({ navigation }) => {
     dispatch(fetchAuth(flipLogin, flipLogin ? loginValues : registerValues))
   }
 
+  const fields = form.map((field) => {
+    return (
+      <View key={field.param}>
+        <TextInput
+          style={[
+            stylesField.field,
+            flipLogin && field.param === "username" && stylesField.field_closed,
+          ]}
+          label={field.label}
+          mode='outlined'
+          value={field.value}
+          onChangeText={(text) => handleChangeField(text, field.param)}
+        />
+        <Text
+          style={{
+            color: "red",
+          }}
+        >
+          {field.msg}
+        </Text>
+      </View>
+    )
+  })
+
   return (
     <View style={styles.wrapper}>
       <View
@@ -89,33 +114,7 @@ const Auth: React.FC<IAuthProps> = ({ navigation }) => {
         </Text>
       </View>
 
-      <View>
-        {form.map((field) => {
-          return (
-            <View key={field.param}>
-              <TextInput
-                style={[
-                  styles.field,
-                  flipLogin &&
-                    field.param === "username" &&
-                    styles.field_closed,
-                ]}
-                label={field.label}
-                mode='outlined'
-                value={field.value}
-                onChangeText={(text) => handleChangeField(text, field.param)}
-              />
-              <Text
-                style={{
-                  color: "red",
-                }}
-              >
-                {field.msg}
-              </Text>
-            </View>
-          )
-        })}
-      </View>
+      <View>{fields}</View>
       <View
         style={{
           flexDirection: "row",
@@ -146,12 +145,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 15,
     justifyContent: "center",
-  },
-  field: {
-    marginBottom: 15,
-  },
-  field_closed: {
-    display: "none",
   },
 })
 

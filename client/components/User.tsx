@@ -1,45 +1,99 @@
 import React from "react"
-import { View, Text, Image } from "react-native"
+import { View, Text, Image, TouchableOpacity } from "react-native"
 import { IUser } from "../interfaces"
 // @ts-ignore
 import Icon from "react-native-vector-icons/MaterialIcons"
 
-const User: React.FC<IUser> = ({ ava, username, email, role }) => {
+interface IUserProps extends IUser {
+  navigation: any
+}
+
+const User: React.FC<IUserProps> = ({
+  navigation,
+  _id,
+  ava,
+  username,
+  email,
+  role,
+}) => {
   return (
-    <View>
-      <View>
+    <View
+      style={{
+        flexDirection: "row",
+        borderBottomWidth: 1,
+        borderColor: "lightgrey",
+        padding: 10,
+        backgroundColor: "white",
+        marginTop: 10,
+      }}
+    >
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("User", {
+            userId: _id,
+          })
+        }
+        style={{
+          borderWidth: 1,
+          borderColor: "lightgrey",
+          borderRadius: 100 / 2,
+        }}
+      >
         <Image
           source={{ uri: ava }}
           style={{
-            width: 120,
-            height: 120,
+            width: 100,
+            height: 100,
+            borderRadius: 100 / 2,
           }}
         />
         {role === "admin" && (
           <Icon
             name='verified-user'
             size={30}
-            style={
-              {
-                // position: "absolute",
-                // bottom: 10,
-                // right: 10,
-                // borderWidth: 1,
-                // borderColor: "lightgrey",
-                // width: 50,
-                // height: 50,
-                // borderRadius: 50 / 2,
-                // textAlign: "center",
-                // lineHeight: 50,
-                // backgroundColor: "whitesmoke",
-              }
-            }
+            style={{
+              position: "absolute",
+              bottom: 4,
+              right: 4,
+              borderWidth: 1,
+              borderColor: "lightgrey",
+              width: 30,
+              height: 30,
+              borderRadius: 30 / 2,
+              textAlign: "center",
+              lineHeight: 30,
+              backgroundColor: "whitesmoke",
+              fontSize: 20,
+            }}
             color='#333'
           />
         )}
-      </View>
-      <View>
-        <Text>{username}</Text>
+      </TouchableOpacity>
+      <View
+        style={{
+          paddingLeft: 10,
+        }}
+      >
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("User", {
+              userId: _id,
+            })
+          }
+        >
+          <Text
+            style={{
+              paddingVertical: 5,
+              fontSize: 20,
+              fontWeight: "bold",
+            }}
+          >
+            {username}
+          </Text>
+        </TouchableOpacity>
+        <Text>
+          email: <Text>{email}</Text>
+        </Text>
       </View>
     </View>
   )

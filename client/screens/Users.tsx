@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react"
-import { View, Text } from "react-native"
+import { View, Text, FlatList, ListRenderItem } from "react-native"
 import axios from "axios"
 import { IUser } from "../interfaces"
 import User from "../components/User"
 
-const Users: React.FC = () => {
+interface IUserProps {
+  navigation: any
+}
+
+const Users: React.FC<IUserProps> = ({ navigation }) => {
   const [users, setUser] = useState<IUser[]>([])
   const [initLoad, setInitLoad] = useState(true)
 
@@ -21,7 +25,6 @@ const Users: React.FC = () => {
     fetchData()
   }, [])
 
-  console.log("All USERS: ", users)
   if (initLoad) {
     return (
       <View>
@@ -29,11 +32,14 @@ const Users: React.FC = () => {
       </View>
     )
   }
+
   return (
     <View>
-      {users.map((user) => {
-        return <User key={user.email} {...user} />
-      })}
+      <FlatList
+        data={users}
+        renderItem={({ item }) => <User navigation={navigation} {...item} />}
+        keyExtractor={(user) => user._id}
+      />
     </View>
   )
 }

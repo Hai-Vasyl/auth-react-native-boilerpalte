@@ -34,7 +34,7 @@ router.post(
   login_user
 )
 
-router.get("/user-info/:userId", auth, get_user)
+router.get("/user-info/:userId", get_user)
 
 router.get("/users", get_users)
 
