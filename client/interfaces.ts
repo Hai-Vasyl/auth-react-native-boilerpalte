@@ -1,3 +1,6 @@
-export interface IHomeProps {
-  navigation: any
+export interface IUser {
+  ava: string
+  role: string
+  email: string
+  username: string
 }

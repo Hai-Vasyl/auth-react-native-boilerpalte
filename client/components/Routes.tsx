@@ -1,5 +1,4 @@
 import React from "react"
-import { View } from "react-native"
 import Home from "../screens/Home"
 import User from "../screens/User"
 import UserEdit from "../screens/UserEdit"
@@ -36,20 +35,21 @@ const Routes: React.FC = () => {
 
   const mainRoutes: IRoute[] = [
     { name: "Home", component: Home },
-    // { name: "Users", component: Users },
+    { name: "Users", component: Users },
+    { name: "User", component: User },
   ]
 
   const userRoutes: IRoute[] = [
     ...mainRoutes,
-    // { name: "User", component: User },
-    // { name: "UserEdit", component: UserEdit },
+    { name: "UserEdit", component: UserEdit },
   ]
 
   const unRegRoutes: IRoute[] = [
     ...mainRoutes,
-    // { name: "Auth", component: Auth },
+    { name: "Auth", component: Auth },
   ]
 
+  console.log("ROutes", { token, user })
   return (
     <NavigationContainer>
       <Stack.Navigator>

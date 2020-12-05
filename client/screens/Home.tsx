@@ -1,14 +1,30 @@
 import React from "react"
-import { View, TouchableOpacity, Text, Image, StyleSheet } from "react-native"
+import { View, Image } from "react-native"
 //@ts-ignore
 import imgMain from "../images/undraw_Mobile_application_mr4r.png"
 import { useSelector } from "react-redux"
 import { RootStore } from "../redux/store"
+import Button from "../components/Button"
 
-const Home: React.FC = () => {
+interface IHomeProps {
+  navigation: any
+}
+
+const Home: React.FC<IHomeProps> = ({ navigation }) => {
   const {
-    auth: { token },
+    auth: { token, user },
   } = useSelector((state: RootStore) => state)
+
+  const handleGetToProfille = () => {
+    if (token) {
+      navigation.navigate("User", {
+        userId: user._id,
+      })
+    } else {
+      navigation.navigate("Auth")
+    }
+  }
+
   return (
     <View
       style={{
@@ -37,41 +53,19 @@ const Home: React.FC = () => {
           justifyContent: "center",
         }}
       >
-        <TouchableOpacity style={[styles.btn, styles.btnPrimary]}>
-          <Text style={styles.btn__text}>
-            {token ? "My profile" : "Sign in"}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.btn, styles.btnSimple]}>
-          <Text style={[styles.btn__text, styles.btnSimple__text]}>
-            All users
-          </Text>
-        </TouchableOpacity>
+        <Button
+          primary
+          press={handleGetToProfille}
+          title={token ? "My profile" : "Sign in"}
+        />
+        <Button
+          simple
+          press={() => navigation.navigate("Users")}
+          title='All users'
+        />
       </View>
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  btn: {
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderWidth: 1,
-    borderColor: "transparent",
-  },
-  btn__text: {
-    color: "white",
-    fontSize: 17,
-  },
-  btnSimple__text: {
-    color: "#333",
-  },
-  btnPrimary: {
-    backgroundColor: "#333",
-  },
-  btnSimple: {
-    borderColor: "lightgrey",
-  },
-})
 
 export default Home

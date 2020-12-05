@@ -2,10 +2,12 @@ import {
   FETCH_START_AUTH,
   FETCH_SUCCESS_AUTH,
   FETCH_ERROR_AUTH,
+  SET_AUTH,
   IAuthSuccess,
   ActionsInterfaces,
   IError,
 } from "../types/auth"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 interface IInitState extends IAuthSuccess {
   loading: boolean
@@ -45,7 +47,13 @@ const authReducer = (
         errors: [],
       }
     case FETCH_SUCCESS_AUTH:
+      ;(async () => {
+        try {
+          await AsyncStorage.setItem("auth", JSON.stringify(action.payload))
+        } catch (error) {}
+      })()
       const { token: tokenSuccess, user: userSuccess } = action.payload
+
       return {
         ...state,
         loading: false,
@@ -58,6 +66,21 @@ const authReducer = (
         ...state,
         loading: false,
         errors: action.payload,
+      }
+    case SET_AUTH:
+      let authData
+      ;(async () => {
+        try {
+          authData = await AsyncStorage.getItem("auth")
+        } catch (error) {}
+      })()
+      const { token, user } = JSON.parse(authData || "{}")
+      console.log({ token, user })
+
+      return {
+        ...state,
+        user,
+        token,
       }
     default:
       return state

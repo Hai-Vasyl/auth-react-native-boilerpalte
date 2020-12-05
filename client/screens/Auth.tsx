@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from "react"
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-} from "react-native"
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native"
 import { TextInput } from "react-native-paper"
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import { fetchAuth } from "../redux/actions/auth"
 import { useSelector, useDispatch } from "react-redux"
 import { RootStore } from "../redux/store"
+import Button from "../components/Button"
+import { IError } from "../redux/types/auth"
 
 interface IAuthProps {
   navigation: any
@@ -29,11 +25,11 @@ const Auth: React.FC<IAuthProps> = ({ navigation }) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (!loading && errors.length) {
+    if (!loading && errors.length && !token) {
       setForm((prevForm) =>
         prevForm.map((field) => {
           let errorMsg = ""
-          errors.forEach((error) => {
+          errors.forEach((error: IError) => {
             if (field.param === error.param) {
               errorMsg = error.msg
             }
@@ -44,10 +40,10 @@ const Auth: React.FC<IAuthProps> = ({ navigation }) => {
           return field
         })
       )
-    } else if (!loading && !errors.length) {
-      navigation.navigate("About")
+    } else if (!loading && !errors.length && token) {
+      navigation.navigate("Home")
     }
-  }, [errors])
+  }, [errors, loading, token])
 
   const handleChangeField = (value: string, param: string) => {
     setForm((prevForm) =>
@@ -72,92 +68,75 @@ const Auth: React.FC<IAuthProps> = ({ navigation }) => {
     dispatch(fetchAuth(flipLogin, flipLogin ? loginValues : registerValues))
   }
 
-  console.log({ loading, errors, token })
   return (
     <View style={styles.wrapper}>
-      <KeyboardAvoidingView behavior='height'>
-        <View
-          style={{
-            paddingVertical: 10,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-            marginBottom: 15,
-          }}
-        >
-          <Icon
-            name={flipLogin ? "login-variant" : "checkbox-marked-outline"}
-            size={33}
-            color='#9ca2b0'
-          />
-          <Text style={{ fontSize: 30, marginLeft: 5 }}>
-            {flipLogin ? "Login" : "Register"}
-          </Text>
-        </View>
+      <View
+        style={{
+          paddingVertical: 10,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: 15,
+        }}
+      >
+        <Icon
+          name={flipLogin ? "login-variant" : "checkbox-marked-outline"}
+          size={33}
+          color='#9ca2b0'
+        />
+        <Text style={{ fontSize: 30, marginLeft: 5 }}>
+          {flipLogin ? "Login" : "Register"}
+        </Text>
+      </View>
 
-        <View>
-          {form.map((field) => {
-            return (
-              <View key={field.param}>
-                <TextInput
-                  style={[
-                    styles.field,
-                    flipLogin &&
-                      field.param === "username" &&
-                      styles.field_closed,
-                  ]}
-                  label={field.label}
-                  mode='outlined'
-                  value={field.value}
-                  onChangeText={(text) => handleChangeField(text, field.param)}
-                />
-                <Text
-                  style={{
-                    color: "red",
-                  }}
-                >
-                  {field.msg}
-                </Text>
-              </View>
-            )
-          })}
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: 15,
-          }}
-        >
-          <TouchableOpacity
-            activeOpacity={0.6}
-            style={[styles.btn, styles.btn_primary]}
-            onPress={handleSubmitForm}
-          >
-            <Icon
-              name={flipLogin ? "login-variant" : "checkbox-marked-outline"}
-              size={20}
-              color='#9ca2b0'
-            />
-            <Text style={[styles.btn__title, styles.btn_primary__title]}>
-              Sign In
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.6}
-            style={[styles.btn]}
-            onPress={toggleFlipForm}
-          >
-            <Icon
-              name={flipLogin ? "checkbox-marked-outline" : "login-variant"}
-              size={20}
-              color='#9ca2b0'
-            />
-            <Text style={[styles.btn__title]}>Sign Up</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
+      <View>
+        {form.map((field) => {
+          return (
+            <View key={field.param}>
+              <TextInput
+                style={[
+                  styles.field,
+                  flipLogin &&
+                    field.param === "username" &&
+                    styles.field_closed,
+                ]}
+                label={field.label}
+                mode='outlined'
+                value={field.value}
+                onChangeText={(text) => handleChangeField(text, field.param)}
+              />
+              <Text
+                style={{
+                  color: "red",
+                }}
+              >
+                {field.msg}
+              </Text>
+            </View>
+          )
+        })}
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          marginTop: 15,
+        }}
+      >
+        <Button
+          primary
+          title={flipLogin ? "Sign In" : "Sign Up"}
+          press={handleSubmitForm}
+          iconName={flipLogin ? "login-variant" : "checkbox-marked-outline"}
+        />
+        <Button
+          simple
+          title={flipLogin ? "Sign Up" : "Sign In"}
+          press={toggleFlipForm}
+          iconName={flipLogin ? "checkbox-marked-outline" : "login-variant"}
+        />
+      </View>
     </View>
   )
 }
@@ -173,24 +152,6 @@ const styles = StyleSheet.create({
   },
   field_closed: {
     display: "none",
-  },
-  btn: {
-    borderWidth: 1,
-    borderColor: "lightgrey",
-    padding: 17,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  btn_primary: {
-    backgroundColor: "#333",
-    marginRight: 10,
-  },
-  btn__title: { fontSize: 17, marginLeft: 10 },
-  btn_primary__title: {
-    color: "#fff",
   },
 })
 

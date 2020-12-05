@@ -1,6 +1,7 @@
 export const FETCH_START_AUTH = "FETCH_START_AUTH"
 export const FETCH_SUCCESS_AUTH = "FETCH_SUCCESS_AUTH"
 export const FETCH_ERROR_AUTH = "FETCH_ERROR_AUTH"
+export const SET_AUTH = "SET_AUTH"
 
 interface IUser {
   ava: string
@@ -44,9 +45,13 @@ export interface fetchErrorAuth {
   payload: IError[]
 }
 
+export interface setAuth {
+  type: typeof SET_AUTH
+}
+
 export type DispatchActionsFetch =
   | fetchStartAuth
   | fetchSuccessAuth
   | fetchErrorAuth
 
-export type ActionsInterfaces = DispatchActionsFetch
+export type ActionsInterfaces = DispatchActionsFetch | setAuth

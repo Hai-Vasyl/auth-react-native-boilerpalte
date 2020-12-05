@@ -96,3 +96,24 @@ export const login_user = async (req: any, res: any) => {
     res.status(400).json(`Login user error: ${error.message}`)
   }
 }
+
+export const get_user = async (req: any, res: any) => {
+  try {
+    const { userId } = req.params
+    const user = await User.findById(userId).select("-password")
+
+    res.json(user)
+  } catch (error) {
+    res.status(400).json(`Getting user info error: ${error.message}`)
+  }
+}
+
+export const get_users = async (req: any, res: any) => {
+  try {
+    const users = await User.find().select("ava username email role")
+
+    res.json(users)
+  } catch (error) {
+    res.status(400).json(`Getting users error: ${error.message}`)
+  }
+}
