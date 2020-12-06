@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { View, Text } from "react-native"
 import { TextInput } from "react-native-paper"
+// @ts-ignore
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import { fetchAuth } from "../redux/actions/auth"
 import { useSelector, useDispatch } from "react-redux"

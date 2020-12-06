@@ -3,6 +3,7 @@ import { View, Text, Image, ScrollView } from "react-native"
 import { useSelector } from "react-redux"
 import { RootStore } from "../redux/store"
 import moment from "moment"
+// @ts-ignore
 import Icon from "react-native-vector-icons/MaterialIcons"
 import TabButton from "../components/TabButton"
 import axios from "axios"

@@ -1,5 +1,6 @@
 import React from "react"
 import { TouchableOpacity, Text, GestureResponderEvent } from "react-native"
+// @ts-ignore
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import styles from "../styles/button"
 

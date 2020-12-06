@@ -4,9 +4,7 @@ import {
   FETCH_SUCCESS_AUTH,
   FETCH_ERROR_AUTH,
 } from "../types/auth"
-// @ts-ignore
 import { Dispatch } from "redux"
-// @ts-ignore
 import axios from "axios"
 
 interface ICredentials {

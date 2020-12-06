@@ -6,20 +6,20 @@ import { View, Text } from "react-native"
 
 const EjectAuth: React.FC = () => {
   const dispatch = useDispatch()
-  const [loading, setLoading] = useState(true)
+  // const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    dispatch({ type: SET_AUTH })
-    setLoading(false)
-  }, [dispatch])
+  // useEffect(() => {
+  //   dispatch({ type: SET_AUTH })
+  //   setLoading(false)
+  // }, [dispatch])
 
-  if (loading) {
-    return (
-      <View>
-        <Text>LOADING ...</Text>
-      </View>
-    )
-  }
+  // if (loading) {
+  //   return (
+  //     <View>
+  //       <Text>LOADING ...</Text>
+  //     </View>
+  //   )
+  // }
   return <Routes />
 }
 
