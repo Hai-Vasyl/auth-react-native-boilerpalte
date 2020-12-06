@@ -1,22 +1,61 @@
 import React, { useState } from "react"
-import { View, Text, StyleSheet, ScrollView } from "react-native"
+import { View, Text, ScrollView } from "react-native"
 import { TextInput } from "react-native-paper"
 import stylesField from "../styles/field"
 // @ts-ignore
 import Icon from "react-native-vector-icons/FontAwesome5"
 import Button from "../components/Button"
+import { useSelector, useDispatch } from "react-redux"
+import { RootStore } from "../redux/store"
+import { UPDATE_AUTH } from "../redux/types/auth"
+import axios from "axios"
+import stylesAuth from "../styles/auth"
 
-const UserEdit: React.FC = () => {
+interface IUserEditProps {
+  navigation: any
+}
+
+const UserEdit: React.FC<IUserEditProps> = ({ navigation }) => {
+  const {
+    auth: { user, token },
+  } = useSelector((state: RootStore) => state)
+  const dispatch = useDispatch()
+
   const [form, setForm] = useState([
-    { param: "username", label: "Username", value: "", msg: "" },
-    { param: "email", label: "Email", value: "", msg: "" },
-    { param: "ava", label: "Avatar", value: "", msg: "" },
-    { param: "firstname", label: "Firstname", value: "", msg: "" },
-    { param: "lastname", label: "Lastname", value: "", msg: "" },
-    { param: "phone", label: "Phone", value: "", msg: "" },
-    { param: "address", label: "Address", value: "", msg: "" },
-    { param: "bio", label: "Bio", value: "", msg: "" },
-    { param: "birth", label: "Birth", value: "", msg: "" },
+    { param: "username", label: "Username", value: user.username, msg: "" },
+    { param: "email", label: "Email", value: user.email, msg: "" },
+    { param: "ava", label: "Avatar", value: user.ava, msg: "" },
+    {
+      param: "firstname",
+      label: "Firstname",
+      value: user.firstname ? user.firstname : "",
+      msg: "",
+    },
+    {
+      param: "lastname",
+      label: "Lastname",
+      value: user.lastname ? user.lastname : "",
+      msg: "",
+    },
+    {
+      param: "phone",
+      label: "Phone",
+      value: user.phone ? user.phone : "",
+      msg: "",
+    },
+    {
+      param: "address",
+      label: "Address",
+      value: user.address ? user.address : "",
+      msg: "",
+    },
+    { param: "bio", label: "Bio", value: user.bio ? user.bio : "", msg: "" },
+    {
+      param: "birth",
+      label: "Birth",
+      value: user.birth ? user.birth : "",
+      msg: "",
+    },
   ])
 
   const handleChangeField = (value: string, param: string) => {
@@ -30,12 +69,42 @@ const UserEdit: React.FC = () => {
     )
   }
 
-  const handleCanceForm = () => {
-    console.log("Cancel form!")
-  }
+  const handleSubmitForm = async () => {
+    try {
+      const [
+        username,
+        email,
+        ava,
+        firstname,
+        lastname,
+        phone,
+        address,
+        bio,
+        birth,
+      ] = form
+      const res = await axios.post(
+        "http://192.168.1.2:4000/auth/user-update",
+        {
+          username: username.value,
+          email: email.value,
+          ava: ava.value,
+          firstname: firstname.value,
+          lastname: lastname.value,
+          phone: phone.value,
+          address: address.value,
+          bio: bio.value,
+          birth: birth.value,
+        },
+        {
+          headers: {
+            Authorization: `Basic ${token}`,
+          },
+        }
+      )
 
-  const handleSubmitForm = () => {
-    console.log("Submit form!")
+      dispatch({ type: UPDATE_AUTH, payload: { user: res.data, token } })
+      navigation.navigate("User", { userId: user._id })
+    } catch (error) {}
   }
 
   const fields = form.map((field) => {
@@ -60,41 +129,26 @@ const UserEdit: React.FC = () => {
   })
 
   return (
-    <View style={styles.wrapper}>
-      <View
-        style={{
-          paddingVertical: 10,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          marginBottom: 15,
-        }}
-      >
+    <View style={stylesAuth.wrapper}>
+      <View style={stylesAuth.title}>
         <Icon name='user-cog' size={33} color='#9ca2b0' />
-        <Text style={{ fontSize: 30, marginLeft: 5 }}>Edit info</Text>
+        <Text style={stylesAuth.titleText}>Edit info</Text>
       </View>
       <ScrollView>{fields}</ScrollView>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          marginTop: 15,
-        }}
-      >
+      <View style={stylesAuth.btns}>
         <Button primary title='Apply' press={handleSubmitForm} />
-        <Button simple title='Cancel' press={handleCanceForm} />
+        <Button
+          simple
+          title='Cancel'
+          press={() =>
+            navigation.navigate("User", {
+              userId: user._id,
+            })
+          }
+        />
       </View>
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    paddingHorizontal: 15,
-    justifyContent: "center",
-  },
-})
 
 export default UserEdit

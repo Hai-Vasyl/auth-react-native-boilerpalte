@@ -117,3 +117,14 @@ export const get_users = async (req: any, res: any) => {
     res.status(400).json(`Getting users error: ${error.message}`)
   }
 }
+
+export const update_user = async (req: any, res: any) => {
+  try {
+    const { userId } = req
+    await User.updateOne({ _id: userId }, { ...req.body })
+    const userUpadted = await User.findById(userId).select("-password")
+    res.json(userUpadted)
+  } catch (error) {
+    res.status(400).json(`Update user error: ${error.message}`)
+  }
+}

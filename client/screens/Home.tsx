@@ -5,6 +5,7 @@ import imgMain from "../images/undraw_Mobile_application_mr4r.png"
 import { useSelector } from "react-redux"
 import { RootStore } from "../redux/store"
 import Button from "../components/Button"
+import styles from "../styles/home"
 
 interface IHomeProps {
   navigation: any
@@ -26,33 +27,11 @@ const Home: React.FC<IHomeProps> = ({ navigation }) => {
   }
 
   return (
-    <View
-      style={{
-        alignItems: "center",
-        justifyContent: "center",
-        flex: 1,
-      }}
-    >
-      <View
-        style={{
-          marginBottom: 15,
-        }}
-      >
-        <Image
-          style={{
-            width: 320,
-            height: 200,
-            resizeMode: "contain",
-          }}
-          source={imgMain}
-        />
+    <View style={styles.wrapper}>
+      <View style={styles.imgWrapper}>
+        <Image style={styles.img} source={imgMain} />
       </View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-        }}
-      >
+      <View style={styles.btns}>
         <Button
           primary
           press={handleGetToProfille}

@@ -3,6 +3,7 @@ import { View, Text, Image, TouchableOpacity } from "react-native"
 import { IUser } from "../interfaces"
 // @ts-ignore
 import Icon from "react-native-vector-icons/MaterialIcons"
+import styles from "../styles/userComponent"
 
 interface IUserProps extends IUser {
   navigation: any
@@ -17,63 +18,26 @@ const User: React.FC<IUserProps> = ({
   role,
 }) => {
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        borderBottomWidth: 1,
-        borderColor: "lightgrey",
-        padding: 10,
-        backgroundColor: "white",
-        marginTop: 10,
-      }}
-    >
+    <View style={styles.wrapper}>
       <TouchableOpacity
         onPress={() =>
           navigation.navigate("User", {
             userId: _id,
           })
         }
-        style={{
-          borderWidth: 1,
-          borderColor: "lightgrey",
-          borderRadius: 100 / 2,
-        }}
+        style={styles.imgLink}
       >
-        <Image
-          source={{ uri: ava }}
-          style={{
-            width: 100,
-            height: 100,
-            borderRadius: 100 / 2,
-          }}
-        />
+        <Image source={{ uri: ava }} style={styles.imgAvatar} />
         {role === "admin" && (
           <Icon
             name='verified-user'
             size={30}
-            style={{
-              position: "absolute",
-              bottom: 4,
-              right: 4,
-              borderWidth: 1,
-              borderColor: "lightgrey",
-              width: 30,
-              height: 30,
-              borderRadius: 30 / 2,
-              textAlign: "center",
-              lineHeight: 30,
-              backgroundColor: "whitesmoke",
-              fontSize: 20,
-            }}
+            style={styles.iconUser}
             color='#333'
           />
         )}
       </TouchableOpacity>
-      <View
-        style={{
-          paddingLeft: 10,
-        }}
-      >
+      <View style={styles.info}>
         <TouchableOpacity
           onPress={() =>
             navigation.navigate("User", {
@@ -81,15 +45,7 @@ const User: React.FC<IUserProps> = ({
             })
           }
         >
-          <Text
-            style={{
-              paddingVertical: 5,
-              fontSize: 20,
-              fontWeight: "bold",
-            }}
-          >
-            {username}
-          </Text>
+          <Text style={styles.infoUsername}>{username}</Text>
         </TouchableOpacity>
         <Text>
           email: <Text>{email}</Text>

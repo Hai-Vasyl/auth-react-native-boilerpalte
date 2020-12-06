@@ -6,6 +6,7 @@ import moment from "moment"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import TabButton from "../components/TabButton"
 import axios from "axios"
+import styles from "../styles/user"
 
 export interface IUserProps {
   navigation: any
@@ -70,11 +71,6 @@ const User: React.FC<IUserProps> = ({ route, navigation }) => {
     const fetchData = async () => {
       const res = await axios.get(
         `http://192.168.1.2:4000/auth/user-info/${userId}`
-        //  {
-        // headers: token && {
-        //   Authorization: `Basic ${token}`,
-        // },
-        // }
       )
 
       const userInfo = res.data
@@ -108,88 +104,26 @@ const User: React.FC<IUserProps> = ({ route, navigation }) => {
     )
   }
   return (
-    <ScrollView
-      contentContainerStyle={{
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "flex-start",
-      }}
-    >
-      <View
-        style={{
-          position: "relative",
-          marginVertical: 20,
-        }}
-      >
-        <Image
-          source={{ uri: exUserData.ava }}
-          style={{
-            width: 200,
-            height: 200,
-            borderRadius: 200 / 2,
-            borderWidth: 1,
-            borderColor: "lightgrey",
-            padding: 5,
-          }}
-        />
+    <ScrollView contentContainerStyle={styles.wrapper}>
+      <View style={styles.wrapperImg}>
+        <Image source={{ uri: exUserData.ava }} style={styles.avatar} />
         {exUserData.role === "admin" && (
           <Icon
             name='verified-user'
             size={30}
-            style={{
-              position: "absolute",
-              bottom: 10,
-              right: 10,
-              borderWidth: 1,
-              borderColor: "lightgrey",
-              width: 50,
-              height: 50,
-              borderRadius: 50 / 2,
-              textAlign: "center",
-              lineHeight: 50,
-              backgroundColor: "whitesmoke",
-            }}
+            style={styles.userIcon}
             color='#333'
           />
         )}
       </View>
-      <View
-        style={{
-          borderTopWidth: 1,
-          borderColor: "lightgrey",
-          paddingTop: 15,
-        }}
-      >
+      <View style={styles.info}>
         {userData.map((item) => {
           if (item.param === "date") {
             return (
-              <View
-                key={item.param}
-                style={{
-                  borderTopWidth: 1,
-                  borderColor: "lightgrey",
-                  marginTop: 10,
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "grey",
-                    }}
-                  >
-                    {item.title}:
-                  </Text>
-                  <Text
-                    style={{
-                      color: "#333",
-                      fontWeight: "bold",
-                      paddingLeft: 5,
-                    }}
-                  >
+              <View key={item.param} style={styles.infoItem}>
+                <View style={styles.infoRow}>
+                  <Text style={styles.infoTitle}>{item.title}:</Text>
+                  <Text style={styles.infoContent}>
                     {moment(item.value).calendar()}
                   </Text>
                 </View>
@@ -198,37 +132,13 @@ const User: React.FC<IUserProps> = ({ route, navigation }) => {
           }
           return (
             <View key={item.param}>
-              <View
-                style={{
-                  flexDirection: "row",
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 17,
-                    color: "grey",
-                  }}
-                >
-                  {item.title}:
-                </Text>
-                <Text
-                  style={{
-                    color: "#333",
-                    fontWeight: "bold",
-                    paddingLeft: 10,
-                    fontSize: 17,
-                  }}
-                >
+              <View style={styles.infoRow}>
+                <Text style={styles.infoTitleDate}>{item.title}:</Text>
+                <Text style={styles.infoContentDate}>
                   {item.value ? (
                     item.value
                   ) : (
-                    <Text
-                      style={{
-                        color: "lightgrey",
-                      }}
-                    >
-                      Empty
-                    </Text>
+                    <Text style={styles.infoTitle}>Empty</Text>
                   )}
                 </Text>
               </View>
@@ -236,23 +146,17 @@ const User: React.FC<IUserProps> = ({ route, navigation }) => {
           )
         })}
       </View>
-      <View
-        style={{
-          flexDirection: "row",
-          position: "absolute",
-          bottom: 0,
-          right: 0,
-          left: 0,
-        }}
-      >
+      <View style={styles.btns}>
         <TabButton
           press={() => navigation.navigate("Users")}
           title='All users'
         />
-        <TabButton
-          press={() => navigation.navigate("UserEdit")}
-          title='Edit info'
-        />
+        {token && userId === user._id && (
+          <TabButton
+            press={() => navigation.navigate("UserEdit")}
+            title='Edit info'
+          />
+        )}
       </View>
     </ScrollView>
   )

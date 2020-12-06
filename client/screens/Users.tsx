@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { View, Text, FlatList, ListRenderItem } from "react-native"
+import { View, Text, FlatList } from "react-native"
 import axios from "axios"
 import { IUser } from "../interfaces"
 import User from "../components/User"

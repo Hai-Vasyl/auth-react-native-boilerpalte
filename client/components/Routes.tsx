@@ -49,7 +49,6 @@ const Routes: React.FC = () => {
     { name: "Auth", component: Auth },
   ]
 
-  console.log("ROutes", { token, user })
   return (
     <NavigationContainer>
       <Stack.Navigator>

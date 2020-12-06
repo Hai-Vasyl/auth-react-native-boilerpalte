@@ -1,10 +1,6 @@
 import React from "react"
-import {
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  GestureResponderEvent,
-} from "react-native"
+import { TouchableOpacity, Text, GestureResponderEvent } from "react-native"
+import styles from "../styles/tabbutton"
 
 interface ITabButtonProps {
   exStyle?: { [key: string]: any }
@@ -19,19 +15,5 @@ const TabButton: React.FC<ITabButtonProps> = ({ exStyle, title, press }) => {
     </TouchableOpacity>
   )
 }
-
-const styles = StyleSheet.create({
-  btn: {
-    padding: 15,
-    borderTopWidth: 1,
-    borderColor: "lightgrey",
-    backgroundColor: "white",
-    flex: 1,
-    borderLeftWidth: 1,
-  },
-  btn__text: {
-    textAlign: "center",
-  },
-})
 
 export default TabButton

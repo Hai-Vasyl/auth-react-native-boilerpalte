@@ -8,10 +8,13 @@ import store from "./redux/store"
 
 export default function App() {
   return (
-    <ReduxProvider store={store}>
-      <PaperProvider>
-        <EjectAuth />
-      </PaperProvider>
-    </ReduxProvider>
+    <>
+      <ReduxProvider store={store}>
+        <PaperProvider>
+          <EjectAuth />
+        </PaperProvider>
+      </ReduxProvider>
+      <StatusBar backgroundColor='grey' />
+    </>
   )
 }

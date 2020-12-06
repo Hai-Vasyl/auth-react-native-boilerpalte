@@ -1,11 +1,7 @@
 import React from "react"
-import {
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  GestureResponderEvent,
-} from "react-native"
+import { TouchableOpacity, Text, GestureResponderEvent } from "react-native"
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
+import styles from "../styles/button"
 
 interface IButtonProps {
   simple?: boolean
@@ -13,7 +9,7 @@ interface IButtonProps {
   exStyle?: { [key: string]: any }
   title: string
   iconName?: string
-  press(event: GestureResponderEvent): void | undefined
+  press(event: GestureResponderEvent): any
 }
 
 const Button: React.FC<IButtonProps> = ({
@@ -39,30 +35,5 @@ const Button: React.FC<IButtonProps> = ({
     </TouchableOpacity>
   )
 }
-
-const styles = StyleSheet.create({
-  btn: {
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderWidth: 1,
-    borderColor: "transparent",
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  btn__text: {
-    color: "white",
-    fontSize: 17,
-    marginHorizontal: 5,
-  },
-  btnSimple__text: {
-    color: "#333",
-  },
-  btnPrimary: {
-    backgroundColor: "#333",
-  },
-  btnSimple: {
-    borderColor: "lightgrey",
-  },
-})
 
 export default Button

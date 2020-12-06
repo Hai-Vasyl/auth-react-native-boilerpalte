@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { View, Text, StyleSheet } from "react-native"
+import { View, Text } from "react-native"
 import { TextInput } from "react-native-paper"
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import { fetchAuth } from "../redux/actions/auth"
@@ -8,6 +8,7 @@ import { RootStore } from "../redux/store"
 import Button from "../components/Button"
 import { IError } from "../redux/types/auth"
 import stylesField from "../styles/field"
+import styles from "../styles/auth"
 
 interface IAuthProps {
   navigation: any
@@ -95,34 +96,16 @@ const Auth: React.FC<IAuthProps> = ({ navigation }) => {
 
   return (
     <View style={styles.wrapper}>
-      <View
-        style={{
-          paddingVertical: 10,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          marginBottom: 15,
-        }}
-      >
+      <View style={styles.title}>
         <Icon
           name={flipLogin ? "login-variant" : "checkbox-marked-outline"}
           size={33}
           color='#9ca2b0'
         />
-        <Text style={{ fontSize: 30, marginLeft: 5 }}>
-          {flipLogin ? "Login" : "Register"}
-        </Text>
+        <Text style={styles.titleText}>{flipLogin ? "Login" : "Register"}</Text>
       </View>
-
       <View>{fields}</View>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          marginTop: 15,
-        }}
-      >
+      <View style={styles.btns}>
         <Button
           primary
           title={flipLogin ? "Sign In" : "Sign Up"}
@@ -139,13 +122,5 @@ const Auth: React.FC<IAuthProps> = ({ navigation }) => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    paddingHorizontal: 15,
-    justifyContent: "center",
-  },
-})
 
 export default Auth

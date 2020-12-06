@@ -27,15 +27,6 @@ const { PORT, MONGO_USER, MONGO_PASS, MONGO_DB, NODE_ENV } = process.env
     )
 
     app.use("/auth", usersRoutes)
-    // app.get("/test", (req, res) => {
-    //   try {
-    //     console.log("SERVER")
-    //     console.log("SERVER", req.body)
-    //     res.json("WORKS")
-    //   } catch (error) {
-    //     console.log("SERVER ERROR: ", error.message)
-    //   }
-    // })
 
     app.listen(PORT, () => console.log(`Server started on port: ${PORT}`))
   } catch (error) {

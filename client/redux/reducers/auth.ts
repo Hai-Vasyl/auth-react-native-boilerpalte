@@ -3,6 +3,7 @@ import {
   FETCH_SUCCESS_AUTH,
   FETCH_ERROR_AUTH,
   SET_AUTH,
+  UPDATE_AUTH,
   IAuthSuccess,
   ActionsInterfaces,
   IError,
@@ -75,12 +76,27 @@ const authReducer = (
         } catch (error) {}
       })()
       const { token, user } = JSON.parse(authData || "{}")
-      console.log({ token, user })
 
       return {
         ...state,
         user,
         token,
+      }
+    case UPDATE_AUTH:
+      ;(async () => {
+        try {
+          await AsyncStorage.setItem(
+            "auth",
+            JSON.stringify({ ...action.payload })
+          )
+        } catch (error) {}
+      })()
+      const { token: updateToken, user: updateUser } = action.payload
+
+      return {
+        ...state,
+        user: updateUser,
+        token: updateToken,
       }
     default:
       return state
