@@ -18,9 +18,9 @@ interface IAuthProps {
 const Auth: React.FC<IAuthProps> = ({ navigation }) => {
   const [flipLogin, setFlipLogin] = useState(true)
   const [form, setForm] = useState([
-    { param: "username", label: "Username", value: "", msg: "" },
-    { param: "email", label: "Email", value: "", msg: "" },
-    { param: "password", label: "Password", value: "", msg: "" },
+    { param: "username", label: "Username", value: "NewTest", msg: "" },
+    { param: "email", label: "Email", value: "test@gmail.com", msg: "" },
+    { param: "password", label: "Password", value: "newtest", msg: "" },
   ])
   const {
     auth: { loading, errors, token },

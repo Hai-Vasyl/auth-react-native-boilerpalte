@@ -15,6 +15,7 @@ export const register_user = async (req: any, res: any) => {
     }
 
     const { username, email, password, role, ava } = req.body
+    console.log(req.body)
 
     const userByUsername = await User.findOne({ username })
     const userByemail = await User.findOne({ email })
